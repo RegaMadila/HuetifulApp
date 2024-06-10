@@ -38,7 +38,7 @@ def extract_average_face_color(image_path):
     return hex_color
 
 # Muat model yang sudah disimpan
-model = tf.keras.models.load_model('pallete_generator.h5')
+model = tf.keras.models.load_model('pallete_generator.h5', compile=False)
 
 # Prediksi palet warna berdasarkan warna kulit
 def predict_palette(image_path):
@@ -55,15 +55,15 @@ def predict_palette(image_path):
 def predict_palette_api():
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'})
-    
+
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No selected file'})
-    
+
     if file:
         file_path = os.path.join('uploads', file.filename)
         file.save(file_path)
-        
+
         try:
             skin_tone_hex, predicted_palette = predict_palette(file_path)
             response = {
@@ -75,4 +75,4 @@ def predict_palette_api():
             return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=9999)
